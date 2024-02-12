@@ -22,18 +22,25 @@ export default class AddListItem extends Component {
   onSubmit = (evt) => {
     evt.preventDefault();
     this.props.onAdded(this.state.label);
-  }
+    this.setState({
+      label: "",
+    });
+  };
 
   render() {
     const { onAdded } = this.props;
     return (
-      <form className="add-list-item input-group mb-3 add-list-item" onSubmit={this.onSubmit}>
+      <form
+        className="add-list-item input-group mb-3 add-list-item"
+        onSubmit={this.onSubmit}
+      >
         <input
           type="text"
           className="form-control"
           placeholder="Write a task"
           aria-label="Recipient's username"
           onChange={this.onLabelChange}
+          value={this.state.label}
         />
         <button
           className="btn btn-outline-primary add-list-item-btn"

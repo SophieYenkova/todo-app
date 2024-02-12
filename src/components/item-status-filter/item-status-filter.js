@@ -1,49 +1,27 @@
 import React, { Component } from "react";
 
 export default class ItemStatusFilter extends Component {
+  buttons = [
+    { name: "all", label: "All" },
+    { name: "active", label: "Active" },
+    { name: "done", label: "Done" },
+  ];
   render() {
+    const {filter, onFilterChange} = this.props;
+    const buttons = this.buttons.map(({ name, label }) => {
+      const isActive = filter === name;
+      const clazz = isActive ? 'btn-info' : 'btn-outline-secondary'
+      return (
+        <button type="button"  key={name} className={`btn ${clazz}`} onClick={()=>onFilterChange(name)}>{label}</button>
+      );
+    });
     return (
       <div
         className="btn-group"
         role="group"
         aria-label="Basic radio toggle button group"
       >
-        <input
-          type="radio"
-          className="btn-check"
-          name="btnradio"
-          id="btnradio1"
-          autoComplete="off"
-          readOnly
-          checked
-        />
-        <label className="btn btn-outline-primary" htmlFor="btnradio1">
-          All
-        </label>
-
-        <input
-          type="radio"
-          className="btn-check"
-          name="btnradio"
-          id="btnradio2"
-          readOnly
-          autoComplete="off"
-        />
-        <label className="btn btn-outline-primary" htmlFor="btnradio2">
-          Active
-        </label>
-
-        <input
-          type="radio"
-          className="btn-check"
-          name="btnradio"
-          id="btnradio3"
-          readOnly
-          autoComplete="off"
-        />
-        <label className="btn btn-outline-primary" htmlFor="btnradio3">
-          Done
-        </label>
+        {buttons}
       </div>
     );
   }

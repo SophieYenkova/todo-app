@@ -3,6 +3,7 @@ import AppHeader from "../app-header";
 import SearchPanel from "../search-panel";
 import TodoList from "../todo-list";
 import AddListItem from "../add-list-item/add-list-item";
+import ItemStatusFilter from "../item-status-filter/item-status-filter";
 
 export default class App extends Component {
   maxId = 100;
@@ -12,6 +13,8 @@ export default class App extends Component {
       this.createTodoItem("Make awesome app"),
       this.createTodoItem("Have a lunch"),
     ],
+    term: "",
+    filter: "",
   };
 
   createTodoItem(label) {
@@ -57,7 +60,7 @@ export default class App extends Component {
   onToggleDone = (id) => {
     this.setState(({ todoData }) => {
       return {
-        todoData: this.toggleProperty(todoData, id, 'done')
+        todoData: this.toggleProperty(todoData, id, "done"),
       };
     });
   };
@@ -65,18 +68,54 @@ export default class App extends Component {
   onToggleImportant = (id) => {
     this.setState(({ todoData }) => {
       return {
-        todoData: this.toggleProperty(todoData, id, 'important')
+        todoData: this.toggleProperty(todoData, id, "important"),
       };
     });
   };
 
+  onSearchChange = (term) => {
+    this.setState({ term });
+  };
+
+  onFilterChange = (filter) => {
+    this.setState({ filter });
+  };
+
+  search(items, term) {
+    if (term.length === 0) {
+      return items;
+    }
+    return items.filter((item) => {
+      return item.label.toLowerCase().indexOf(term.toLowerCase()) > -1;
+    });
+  }
+
+  filter(items, filter) {
+    switch (filter) {
+      case "all":
+        return items;
+      case "active":
+        return items.filter((i) => !i.done);
+      case "done":
+        return items.filter((i) => i.done);
+      default:
+        return items;
+    }
+  }
+
   render() {
+    const { todoData, term, filter } = this.state;
+    const visibleItems = this.filter(this.search(todoData, term),filter);
     return (
       <div className="container fixed-top d-flex flex-column">
         <AppHeader />
-        <SearchPanel />
+        <div className="top-panel d-flex">
+        <SearchPanel onSearchChange={this.onSearchChange} />
+        <ItemStatusFilter  filter={filter} onFilterChange={this.onFilterChange}/>
+        </div>
+      
         <TodoList
-          todos={this.state.todoData}
+          todos={visibleItems}
           onDeleted={this.deleteItem}
           onToggleImportant={this.onToggleImportant}
           onToggleDone={this.onToggleDone}
