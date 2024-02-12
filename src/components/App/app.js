@@ -2,20 +2,31 @@ import React, { Component } from "react";
 import AppHeader from "../app-header";
 import SearchPanel from "../search-panel";
 import TodoList from "../todo-list";
+import AddListItem from "../add-list-item/add-list-item";
 
 export default class App extends Component {
+  maxId = 100;
   state = {
     todoData: [
-      { label: "Drink Coffee", important: false, id: 1 },
-      { label: "Make awesome App", important: true, id: 2 },
-      { label: "Have a lunch", important: false, id: 3 },
+      this.createTodoItem("Drink Coffee"),
+      this.createTodoItem("Make awesome app"),
+      this.createTodoItem("Have a lunch"),
     ],
   };
+
+  createTodoItem(label) {
+    return {
+      label,
+      important: false,
+      done: false,
+      id: this.maxId++,
+    };
+  }
 
   deleteItem = (id) => {
     this.setState(({ todoData }) => {
       const idx = todoData.findIndex((el) => el.id === id);
-      const newArray = [...todoData.slice(0,idx), ...todoData.slice(idx + 1)];
+      const newArray = [...todoData.slice(0, idx), ...todoData.slice(idx + 1)];
 
       return {
         todoData: newArray,
@@ -24,12 +35,53 @@ export default class App extends Component {
     console.log(id);
   };
 
+  toggleProperty(arr, id, propName) {
+    const idx = arr.findIndex((el) => el.id === id);
+    const oldItem = arr[idx];
+    const newItem = { ...oldItem, [propName]: !oldItem[propName] };
+
+    return [...arr.slice(0, idx), newItem, ...arr.slice(idx + 1)];
+  }
+
+  addItem = (text) => {
+    console.log("added", text);
+    const newItem = this.createTodoItem(text);
+    this.setState(({ todoData }) => {
+      const newArray = [...todoData, newItem];
+      return {
+        todoData: newArray,
+      };
+    });
+  };
+
+  onToggleDone = (id) => {
+    this.setState(({ todoData }) => {
+      return {
+        todoData: this.toggleProperty(todoData, id, 'done')
+      };
+    });
+  };
+
+  onToggleImportant = (id) => {
+    this.setState(({ todoData }) => {
+      return {
+        todoData: this.toggleProperty(todoData, id, 'important')
+      };
+    });
+  };
+
   render() {
     return (
       <div className="container fixed-top d-flex flex-column">
         <AppHeader />
         <SearchPanel />
-        <TodoList todos={this.state.todoData} onDeleted={this.deleteItem} />
+        <TodoList
+          todos={this.state.todoData}
+          onDeleted={this.deleteItem}
+          onToggleImportant={this.onToggleImportant}
+          onToggleDone={this.onToggleDone}
+        />
+        <AddListItem onAdded={this.addItem} />
       </div>
     );
   }

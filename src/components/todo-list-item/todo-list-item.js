@@ -2,32 +2,16 @@ import React, { Component } from "react";
 import "./todo-list-item.css";
 
 export default class TodoListItem extends Component {
-  state = {
-    done: false,
-    important: false,
-  };
-
-  onLabelClick = () => {
-    console.log(`Done: ${this.props.label}`);
-    this.setState(({ done }) => {
-      return {
-        done: !done,
-      };
-    });
-  };
-
-  onButtonClick = () => {
-    console.log("tyk");
-    this.setState(({ important }) => {
-      return {
-        important: !important,
-      };
-    });
-  };
-
   render() {
-    const { label, onDeleted } = this.props;
-    const { done, important } = this.state;
+    const {
+      label,
+      onDeleted,
+      onToggleImportant,
+      onToggleDone,
+      important,
+      done,
+    } = this.props;
+
     let classNames =
       "todo-list-item shadow-sm p-3 rounded d-flex justify-content-between";
 
@@ -41,7 +25,7 @@ export default class TodoListItem extends Component {
 
     return (
       <div className={classNames}>
-        <span className="todo-list-item-label" onClick={this.onLabelClick}>
+        <span className="todo-list-item-label" onClick={onToggleDone}>
           {label}
         </span>
         <div className="btn-group">
@@ -55,7 +39,7 @@ export default class TodoListItem extends Component {
           <button
             type="button"
             className="btn btn-outline-success"
-            onClick={this.onButtonClick}
+            onClick={onToggleImportant}
           >
             <i className="bi bi-exclamation-circle"></i>
           </button>
