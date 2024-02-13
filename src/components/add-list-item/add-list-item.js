@@ -43,7 +43,7 @@ export default class AddListItem extends Component {
           value={this.state.label}
         />
         <button
-          className="btn btn-outline-primary add-list-item-btn"
+          className="btn btn-outline-secondary add-list-item-btn"
           type="button"
           id="button-addon2"
           onClick={() => onAdded(this.state.label)}

@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import './search-panel.css';
 
 
 export default class SearchPanel extends Component {
@@ -14,17 +15,15 @@ export default class SearchPanel extends Component {
 
   render() {
     return (
-      <div className="d-flex justify-content-center">
         <input
           type="text"
-          className="form-control"
+          className="search-panel form-control"
           placeholder="search..."
           aria-label="search panel"
           value={this.state.term}
           onChange={this.onSearchChange}
 
         />
-      </div>
     );
   }
 }
